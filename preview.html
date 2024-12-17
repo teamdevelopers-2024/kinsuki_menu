@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Menu Card</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: 100vh;
+        margin: 0;
+        background-color: #22346c;
+      }
+      #pdf-viewer {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .pdf-row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap; /* Ensure content wraps on small screens */
+      }
+      .pdf-page {
+        position: relative; /* To overlay the watermark */
+        display: inline-block;
+        margin: 0 10px; /* Space between pages */
+        margin-bottom: 20px; /* Ensure consistent margin at the bottom */
+      }
+      canvas {
+        display: block;
+        max-width: 100%;
+        margin: 0 auto;
+      }
+      .watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg); /* Rotate watermark diagonally */
+        font-size: 50px;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.2); /* Semi-transparent */
+        pointer-events: none; /* Allow clicks to pass through */
+        white-space: nowrap;
+      }
+
+      /* Media Queries for larger screens */
+      @media (min-width: 768px) {
+        .pdf-page {
+          width: calc(50% - 20px); /* Two pages per row on larger screens */
+        }
+      }
+
+      /* Media Queries for mobile screens */
+      @media (max-width: 767px) {
+        .pdf-page {
+          width: 100%; /* One page per row on mobile */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pdf-viewer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+      const url = "/MENU CARD.pdf";  // Provide the correct path to the PDF
+      const pdfViewer = document.getElementById("pdf-viewer");
+
+      // Fetch and render all pages
+      pdfjsLib.getDocument(url).promise.then((pdf) => {
+        const totalPages = pdf.numPages;
+
+        // Render the first page alone
+        pdf.getPage(1).then((page) => {
+          const viewport = page.getViewport({ scale: 1 });
+          const scale = window.innerHeight / viewport.height; // Scale to 100vh height
+          const scaledViewport = page.getViewport({ scale });
+
+          const canvas = document.createElement("canvas");
+          canvas.width = scaledViewport.width;
+          canvas.height = scaledViewport.height;
+
+          const pdfPageDiv = document.createElement("div");
+          pdfPageDiv.classList.add("pdf-page");
+          pdfPageDiv.appendChild(canvas);
+
+          // Add watermark
+          const watermark = document.createElement("div");
+          watermark.classList.add("watermark");
+          watermark.textContent = "PREVIEW";
+          pdfPageDiv.appendChild(watermark);
+
+          pdfViewer.appendChild(pdfPageDiv);
+
+          const ctx = canvas.getContext("2d");
+          page.render({ canvasContext: ctx, viewport: scaledViewport });
+        });
+
+        // Render subsequent pages in pairs (2 pages per row)
+        let pageCounter = 0;
+        let rowDiv = document.createElement("div");
+        rowDiv.classList.add("pdf-row");
+
+        for (let pageNumber = 2; pageNumber <= totalPages; pageNumber++) {
+          pdf.getPage(pageNumber).then((page) => {
+            const viewport = page.getViewport({ scale: 1 });
+            const scale = window.innerHeight / viewport.height; // Scale to 100vh height
+            const scaledViewport = page.getViewport({ scale });
+
+            const canvas = document.createElement("canvas");
+            canvas.width = scaledViewport.width;
+            canvas.height = scaledViewport.height;
+
+            const pdfPageDiv = document.createElement("div");
+            pdfPageDiv.classList.add("pdf-page");
+            pdfPageDiv.appendChild(canvas);
+
+            // Add watermark
+            const watermark = document.createElement("div");
+            watermark.classList.add("watermark");
+            watermark.textContent = "PREVIEW";
+            pdfPageDiv.appendChild(watermark);
+
+            rowDiv.appendChild(pdfPageDiv);
+
+            const ctx = canvas.getContext("2d");
+            page.render({ canvasContext: ctx, viewport: scaledViewport });
+
+            pageCounter++;
+
+            // After every 2 pages, create a new row
+            if (pageCounter % 2 === 0 || pageNumber === totalPages) {
+              pdfViewer.appendChild(rowDiv);
+              rowDiv = document.createElement("div");
+              rowDiv.classList.add("pdf-row"); // Create a new row
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
