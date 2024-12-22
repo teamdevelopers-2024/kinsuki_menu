@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Menu Card</title>
+    <link rel="preload" href="/MENU CARD.pdf" as="document" />
     <style>
       body {
         display: flex;
@@ -26,26 +27,16 @@
         flex-wrap: wrap; /* Ensure content wraps on small screens */
       }
       .pdf-page {
-        position: relative; /* To overlay the watermark */
+        /* background-color: ; */
         display: inline-block;
         margin: 0 10px; /* Space between pages */
         margin-bottom: 20px; /* Ensure consistent margin at the bottom */
       }
       canvas {
+        background-color: aqua;
         display: block;
         max-width: 100%;
         margin: 0 auto;
-      }
-      .watermark {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(-45deg); /* Rotate watermark diagonally */
-        font-size: 50px;
-        font-weight: bold;
-        color: rgba(255, 255, 255, 0.2); /* Semi-transparent */
-        pointer-events: none; /* Allow clicks to pass through */
-        white-space: nowrap;
       }
 
       /* Media Queries for larger screens */
@@ -68,7 +59,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script>
-      const url = "/MENU CARD.pdf";  // Provide the correct path to the PDF
+      const url = "/MENU CARD.pdf"; // Provide the correct path to the PDF
       const pdfViewer = document.getElementById("pdf-viewer");
 
       // Fetch and render all pages
@@ -88,12 +79,6 @@
           const pdfPageDiv = document.createElement("div");
           pdfPageDiv.classList.add("pdf-page");
           pdfPageDiv.appendChild(canvas);
-
-          // Add watermark
-          const watermark = document.createElement("div");
-          watermark.classList.add("watermark");
-          watermark.textContent = "PREVIEW";
-          pdfPageDiv.appendChild(watermark);
 
           pdfViewer.appendChild(pdfPageDiv);
 
@@ -119,12 +104,6 @@
             const pdfPageDiv = document.createElement("div");
             pdfPageDiv.classList.add("pdf-page");
             pdfPageDiv.appendChild(canvas);
-
-            // Add watermark
-            const watermark = document.createElement("div");
-            watermark.classList.add("watermark");
-            watermark.textContent = "PREVIEW";
-            pdfPageDiv.appendChild(watermark);
 
             rowDiv.appendChild(pdfPageDiv);
 
