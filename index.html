@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Menu Card</title>
-    <link rel="preload" href="/MENU CARD.pdf" as="document" />
+    <link rel="preload" href="/NEW MENU CARD.pdf" as="document" />
     <style>
       body {
         display: flex;
@@ -24,27 +24,24 @@
       .pdf-row {
         display: flex;
         justify-content: center;
-        flex-wrap: wrap; /* Ensure content wraps on small screens */
+        flex-wrap: wrap; 
       }
       .pdf-page {
         display: inline-block;
-        margin: 0 10px; /* Space between pages */
-        margin-bottom: 20px; /* Ensure consistent margin at the bottom */
+        margin: 0 10px; 
+        margin-bottom: 20px; 
       }
       canvas {
         display: block;
         max-width: 100%;
         margin: 0 auto;
       }
-      /* Ensure the first page covers the full viewport height */
       .first-page {
-        height: calc(var(--vh, 1vh) * 100); /* Dynamic height calculation */
+        height: calc(var(--vh, 1vh) * 100); 
       }
-
-      /* Media Queries for larger screens */
       @media (min-width: 768px) {
         .pdf-page {
-          width: calc(50% - 20px); /* Two pages per row on larger screens */
+          width: calc(50% - 20px); 
         }
       }
 
